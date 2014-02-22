@@ -606,12 +606,35 @@ int main(int argc, char * argv[])
 		cerr << "Checking consistency" << endl;
 		// check_consistency();
 		
-		// calculate_growth();
+		//calculate_growth();
 		
-		calculate_dep_growth(dataset.package("udev"));
+		//calculate_dep_growth(dataset.package("xlib"));
 		// calculate_average_dep_growth(1);
+		
+		
+		// Fix dev-mapper fockup
+		{
+			Package::Ptr pkg = dataset.package("dev-manager");
+			Version::Ptr latest = pkg->version(149);
+			vector<Version::Ptr> deps = latest->deps();
+			for(int i = 0; i < deps.size(); ++i) {
+				latest->remove_dep(deps[i]);
+			}
+		}
+		
+		//
+		/*
+		for(int i = 0; i < dataset.packages().size(); ++i) {
+			Package::Ptr pkg = dataset.package(i);
+			Version::Ptr latest = pkg->version(149);
+			if(!latest->exists())
+				continue;
+			cout << latest->in_degree() << "\t" << latest->out_degree() << "\t" << pkg->label() << endl;
+		}
+		*/
+		
 		cerr << "Outputting as GML" << endl;
-		// dataset.to_gml(cout, 128);
+		dataset.to_gml(cout, 149);
 		
 		/*
 		

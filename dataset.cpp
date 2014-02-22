@@ -46,6 +46,8 @@ Package::Ptr Dataset::package(const string& fullname)
 			return _packages[p];
 		}
 	}
+	cerr << "Package " << fullname << " not found!";
+	return 0;
 }
 
 //
@@ -65,17 +67,19 @@ void Dataset::elliminate_virtuals()
 			pkg->set_exists(false);
 			continue;
 		}
+		/*
 		for(int t=0; t < max_t; t++)
 		{
 			Version::Ptr ver = pkg->version(t);
 			if(!ver->exists() && (ver->in_degree() || ver->out_degree()))
 			{
 				// cerr << "V";
-				// cerr << "Elliminating " << *ver << endl;
+				cerr << "V Elliminating " << *ver << endl;
 				ver->link_through();
 				ver->set_exists(false);
 			}
 		}
+		*/
 	}
 }
 
