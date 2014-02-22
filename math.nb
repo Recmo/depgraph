@@ -1,0 +1,12 @@
+In[1]:=
+SetDirectory["~/mthesis/graphanalysis"]
+data:=Import["data"];
+T:=#[[1]]&/@data;
+pkgs:=#[[2]]&/@data;
+newpkgs:=#[[3]]&/@data;
+delpkgs :=#[[4]]&/@data;
+deps:=#[[5]]&/@data;
+rev:=#[[6]]&/@data;
+Out[1]= /home/remco/UT/Vakken/410004 Master Thesis Business Administration/graphanalysis
+ListPlot[
+Out[9]= List
