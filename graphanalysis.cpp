@@ -591,14 +591,15 @@ int main(int argc, char * argv[])
 		cerr << "Reading file" << endl;
 		const int buffer_size = 100*1024*1024;
 		char* buffer = new char[buffer_size];
+		assert(buffer);
 		file.read(buffer, buffer_size);
 		file.close();
 		
+		cerr << "Parsing file" << endl;
 		char* cursor = buffer;
 		dataset.from_bip(cursor);
 		
-		if(false)
-		{
+		if(false) {
 			cerr << "Elliminating metas and virtuals" << endl;
 			dataset.elliminate_virtuals();
 			dataset.elliminate_metas();
@@ -622,47 +623,25 @@ int main(int argc, char * argv[])
 			}
 		}
 		
-		//
-		/*
-		for(int i = 0; i < dataset.packages().size(); ++i) {
-			Package::Ptr pkg = dataset.package(i);
-			Version::Ptr latest = pkg->version(149);
-			if(!latest->exists())
-				continue;
-			cout << latest->in_degree() << "\t" << latest->out_degree() << "\t" << pkg->label() << endl;
-		}
-		*/
-		
 		cerr << "Outputting as GML" << endl;
-		dataset.to_gml(cout, 149);
-		
-		/*
-		
-		uint64 num_clusters = read_uint(cursor);
-		clusters.reserve(num_clusters);
-		for(int i=0; i < num_clusters; i++)
-		{
-			clusters.push_back(read_string(cursor));
+		for(int i = 0; i < 150; ++i) {
+			int year = 2000 + (i / 12);
+			int month = (i % 12) + 1;
+			std::stringstream fileName;
+			fileName << "gentoo-depgraph-";
+			fileName << year;
+			fileName << "-";
+			fileName.width(2);
+			fileName << std::setfill('0') << month;
+			fileName << ".gml";
+			cout << i << "\t" << fileName.str() << endl;
+			std:string fileNameStr = fileName.str();
+			std::ofstream file(fileNameStr.c_str(), std::ios::out | std::ios::trunc);
+			dataset.to_gml(file, i);
+			file.close();
 		}
-		uint64 num_pkg = read_uint(cursor);
-		packages.reserve(num_pkg);
-		for(int k=0; k < num_pkg; k++)
-		{
-			packages.push_back(read_package(cursor));
-		}
-		deserialize_references();
-		cerr << "Calculating reverse dependencies" << endl;
-		calculate_reverse_deps();
-		cerr << "Elliminating virtuals" << endl;
-		elliminate_virtuals();
-		cerr << "Elliminating metas" << endl;
-		elliminate_metas();
-		cerr << "Checking consistency" << endl;
-		check_consistency();
 		
-		//dump_graph_gml(48);
-		calculate();
-		*/
+		
 	}
 	catch(const char* message)
 	{
